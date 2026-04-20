@@ -5,7 +5,11 @@ import { spawn } from 'child_process';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const port = process.env.PORT || 3000;
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port ${port}`);
+});
 
   app.use(express.json());
 
