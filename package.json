@@ -1,4 +1,11 @@
 {
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js"
+  }
+}
+
+{
   "name": "react-example",
   "private": true,
   "version": "0.0.0",
