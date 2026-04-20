@@ -1,0 +1,29 @@
+{
+  "entities": {
+    "Measurement": {
+      "title": "Measurement",
+      "description": "A kinematics measurement record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "distance": { "type": "number" },
+        "displacement": { "type": "number" },
+        "time": { "type": "number" },
+        "speed": { "type": "number" },
+        "velocity": { "type": "number" },
+        "acceleration": { "type": "number" },
+        "retardation": { "type": "number" },
+        "derivedFields": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "distance", "displacement", "time", "speed", "velocity"]
+    }
+  },
+  "firestore": {
+    "measurements/{measurementId}": {
+      "schema": "Measurement",
+      "description": "User measurements for kinematics experiments."
+    }
+  }
+}

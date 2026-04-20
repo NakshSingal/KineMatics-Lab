@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidMeasurement(data) {
+      return data.keys().hasAll(['userId', 'name', 'distance', 'displacement', 'time', 'speed', 'velocity', 'acceleration', 'retardation', 'derivedFields', 'createdAt'])
+        && data.keys().size() == 11
+        && data.userId == request.auth.uid
+        && data.name is string && data.name.size() <= 200
+        && data.distance is number
+        && data.displacement is number
+        && data.time is number && data.time >= 0
+        && data.speed is number
+        && data.velocity is number
+        && data.acceleration is number
+        && data.retardation is number
+        && data.derivedFields is list;
+    }
+
+    match /measurements/{measurementId} {
+      allow get: if isOwner(resource.data.userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      allow create: if isSignedIn() 
+        && isValidId(measurementId)
+        && isValidMeasurement(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      
+      allow update: if isOwner(resource.data.userId)
+        && isValidMeasurement(request.resource.data)
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.createdAt == resource.data.createdAt // Immutable createdAt
+        && (
+          // Action: Rename
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name'])
+          // Add other actions if needed
+        );
+
+      allow delete: if isOwner(resource.data.userId);
+    }
+  }
+}

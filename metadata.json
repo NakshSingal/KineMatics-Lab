@@ -1,0 +1,6 @@
+{
+  "name": "Kinematics & Statistics Lab",
+  "description": "An advanced tool for recording kinematics data (distance, displacement, time, speed, velocity) with AI-powered motion analysis (CV) and Python-backed statistical verification.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": []
+}

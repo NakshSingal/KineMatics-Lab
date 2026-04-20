@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@layer utilities {
+  @keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+  
+  @keyframes pulse-ring {
+    0% { transform: scale(0.95); opacity: 0.2; }
+    50% { transform: scale(1.05); opacity: 0.5; }
+    100% { transform: scale(0.95); opacity: 0.2; }
+  }
+
+  .animate-scan {
+    animation: scan 4s linear infinite;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2s ease-in-out infinite;
+  }
+}
